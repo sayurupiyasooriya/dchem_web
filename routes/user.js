@@ -3,7 +3,6 @@ const router = express.Router()
 const { createUser, login } = require('../controllers/UserController')
 
 //routes
-
 // create new user
 router.post('/create', async (req, res) => {
     try {
