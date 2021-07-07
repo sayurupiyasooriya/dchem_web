@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router()
+const jwt = require('jsonwebtoken')
 const { createUser, login } = require('../controllers/UserController')
 
 //routes
@@ -26,7 +27,12 @@ router.post('/login', async (req, res) => {
         else if (user === 1)
             res.status(400).send("Wrong Credentials")
         else {
-            res.json(user)
+            //create jwt
+            jwt.sign({ user }, 'secretkey', (err, token) => {
+                res.json({
+                    token
+                })
+            })
         }
     } catch (err) {
         res.json({ message: err })

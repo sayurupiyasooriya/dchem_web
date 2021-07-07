@@ -1,7 +1,8 @@
 const express = require('express');
-
+const jwt = require('jsonwebtoken')
 const router = express.Router()
 const Post = require('../models/Post')
+const { authentication } = require('../controllers/authentication')
 //routes
 
 // get all posts
@@ -14,6 +15,7 @@ router.get('/', async (req, res) => {
     }
 })
 
+
 // save a new post
 router.post('/', async (req, res) => {
     const post = new Post({
@@ -22,8 +24,10 @@ router.post('/', async (req, res) => {
     })
 
     try {
+
         const posted = await post.save()
         res.json(posted)
+
     } catch (err) {
         res.json({ message: err })
     }

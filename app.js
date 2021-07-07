@@ -4,14 +4,15 @@ require('dotenv/config')
 const postRoute = require('./routes/post')
 const userRoute = require('./routes/user')
 const cors = require('cors')
-
-const app = express();
+const app = express()
+const jwt = require('jsonwebtoken')
+const { verifyToken, authentication } = require('./controllers/authentication')
 
 app.use(cors())
 
 app.use(express.json())
 
-app.use('/post', postRoute)
+app.use('/post', verifyToken, authentication, postRoute)
 app.use('/user', userRoute)
 
 
