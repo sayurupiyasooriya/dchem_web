@@ -1,5 +1,4 @@
 const bcrypt = require('bcryptjs')
-const { findOne } = require('../models/User')
 const User = require('../models/User')
 
 const login = async (req) => {
@@ -12,8 +11,6 @@ const login = async (req) => {
     const checkPw = await bcrypt.compare(req.body.password, user.password)
     if (!checkPw) return 1
     else return user
-
-    //dehashed password
 
 }
 

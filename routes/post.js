@@ -1,9 +1,7 @@
 const express = require('express');
-const jwt = require('jsonwebtoken')
 const router = express.Router()
 const Post = require('../models/Post')
-const { authentication } = require('../controllers/authentication')
-//routes
+
 
 // get all posts
 router.get('/', async (req, res) => {

@@ -19,6 +19,8 @@ router.post('/create', async (req, res) => {
 
 })
 
+
+// login route
 router.post('/login', async (req, res) => {
     try {
         const user = await login(req)
@@ -28,9 +30,9 @@ router.post('/login', async (req, res) => {
             res.status(400).send("Wrong Credentials")
         else {
             //create jwt
-            jwt.sign({ user }, 'secretkey', (err, token) => {
+            jwt.sign({ user }, 'secretkey', (err, accessToken) => {
                 res.json({
-                    token
+                    accessToken
                 })
             })
         }
