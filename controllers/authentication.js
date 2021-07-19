@@ -18,7 +18,7 @@ const authentication = async (req, res, next) => {
 }
 
 
-//verifi jwt
+//verify jwt
 const verifyToken = (req, res, next) => {
     //get auth headers
     const bearerHeader = req.headers['authorization']
