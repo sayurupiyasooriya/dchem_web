@@ -1,35 +1,35 @@
 const express = require('express');
 const router = express.Router()
 const Course = require('../models/Course')
+const { getAll, create, updateCourse, deleteCourse } = require('../controllers/CourseController');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads')
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+        cb(null, uniqueSuffix + file.originalname)
+    }
+})
+const upload = multer({ storage: storage })
+
+
 
 
 // get all course
 router.get('/', async (req, res) => {
-    try {
-        const course = await Course.find()
-        res.json(course)
-    } catch (err) {
-        res.json({ message: err })
-    }
+    const allCourses = await getAll()
+    res.json(allCourses)
 })
 
 
-// save a new course
-router.post('/', async (req, res) => {
-    const course = new Course({
-        title: req.body.title,
-        description: req.body.description
-    })
-
-    try {
-
-        const course = await Course.save()
-        res.json(posted)
-
-    } catch (err) {
-        res.json({ message: err })
-    }
-
+// create a new course
+router.post('/create', upload.single('imgCourse'), async (req, res) => {
+    const createdCourse = await create(req)
+    console.log(req.file)
+    res.json(createdCourse)
 })
 
 // get course by id
@@ -43,14 +43,22 @@ router.get('/:courseId', async (req, res) => {
 })
 
 
+//get Course by field id
+router.get('/field/:fieldId', async (req, res) => {
+    try {
+        const course = await Course.find({ field: req.params.fieldId })
+        res.json(course)
+    } catch (error) {
+        res.json({ message: error })
+    }
+})
+
 // update course
 router.patch('/:courseId', async (req, res) => {
     try {
-        const updatedCourse = await Course.updateOne({ _id: req.params.courseId },
-            { $set: { title: req.body.title } })
-        res.json(updatedCourse)
+        res.json(await updateCourse(req))
     } catch (err) {
-        res.json({ message: err })
+        res.json(err)
     }
 })
 
@@ -58,10 +66,9 @@ router.patch('/:courseId', async (req, res) => {
 // delete a course
 router.delete('/:courseId', async (req, res) => {
     try {
-        const deletedCourse = await Post.deleteOne(req.param.courseId)
-        res.json(deletedCourse)
+        res.json(await deleteCourse(req))
     } catch (err) {
-        res.json({ message: err })
+        res.json(err)
     }
 })
 

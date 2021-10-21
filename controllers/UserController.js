@@ -29,11 +29,12 @@ const createUser = async (req) => {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         password: hashedPw,
-        email: req.body.email
+        email: req.body.email,
+        courses: req.body.courseID,
+        usertype: req.body.usertype
     })
     try {
-        const savedUser = await user.save();
-        return savedUser
+        return (await user.save());
     } catch (error) {
         return error
     }

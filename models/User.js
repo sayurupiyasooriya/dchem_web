@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Courses = require('./Course')
 
 
 const UserSchema = mongoose.Schema({
@@ -17,6 +18,16 @@ const UserSchema = mongoose.Schema({
     email: {
         type: String,
         require: true
+    },
+    courses: [{
+        type: mongoose.Types.ObjectId,
+        ref: 'Courses',
+        require: true
+    }],
+    userType: {
+        type: Number,
+        require: true,
+        default: 0
     }
 })
 
