@@ -31,11 +31,11 @@ const addVideo = async (req) => {
     try {
         return (
             await Course.findByIdAndUpdate(
-                { _id: req.courseId },
+                { _id: req.body.courseId },
                 {
                     video: {
-                        videoName: req.videoName,
-                        videoLocation: req.videoLocation
+                        videoName: req.file.originalname,
+                        videoLocation: req.file.path
                     }
                 }
             )
@@ -81,5 +81,6 @@ module.exports = {
     getAll,
     create,
     updateCourse,
-    deleteCourse
+    deleteCourse,
+    addVideo
 }
