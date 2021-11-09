@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv/config')
-const postRoute = require('./routes/post')
+const courseRoute = require('./routes/courseRoute')
 const userRoute = require('./routes/user')
 const cors = require('cors')
 const app = express()
@@ -12,10 +12,10 @@ const fieldRoute = require('./routes/fieldRoutes')
 app.use(cors())
 
 app.use(express.json())
-
-app.use('/post', verifyToken, authentication, postRoute)
+app.use('/uploads', express.static("uploads"))
+app.use('/course', courseRoute)
 app.use('/user', userRoute)
-app.use('/field', verifyToken, authentication, fieldRoute)
+app.use('/field', fieldRoute)
 
 
 mongoose.connect(process.env.DB_CONNECTION, {

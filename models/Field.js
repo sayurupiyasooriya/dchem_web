@@ -13,8 +13,7 @@ const FieldScheema = mongoose.Schema({
         imgName: String,
         imgLocation: String
 
-    },
-    teachers: [{}]
+    }
 })
 
-module.exports = mongoose.model('Field', FieldScheema)
+module.exports = mongoose.model('Fields', FieldScheema)

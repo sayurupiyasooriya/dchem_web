@@ -3,20 +3,16 @@ const Field = require("../models/Field")
 
 const create = async (req) => {
     const field = new Field({
-        name: req.name,
+        name: req.body.name,
         description: req.description,
         image: {
-            imgName: req.file.filename.toString(),
-            imgLocation: req.file.path.toString()
-        },
-        teachers: req.body.teachers
-
-
+            imgName: req.file.originalname,
+            imgLocation: req.file.path
+        }
     })
 
     try {
-        const savedField = await field.save()
-        return savedField
+        return (await field.save())
     } catch (error) {
         return error
     }
@@ -25,12 +21,22 @@ const create = async (req) => {
 
 const getAll = async () => {
     try {
-        const field = await Field.find()
-        return field
+        return (await Field.find())
     } catch (err) {
         return err
     }
 }
 
-exports.getAll = getAll
-exports.create = create
+const getFieldSelect = async () => {
+    try {
+        return (await Field.find({}, { "image": 0 }))
+    } catch (err) {
+        return err
+    }
+}
+
+module.exports = {
+    getAll,
+    create,
+    getFieldSelect
+}
