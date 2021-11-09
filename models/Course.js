@@ -16,11 +16,16 @@ const CourseScheema = mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    video: {
+    video: [{
         videoName: String,
         videoLocation: String
 
-    },
+    }],
+    doc: [{
+        docName: String,
+        docLocation: String
+
+    }],
     field: {
         type: mongoose.Types.ObjectId,
         ref: 'Fields',

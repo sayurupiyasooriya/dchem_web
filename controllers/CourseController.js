@@ -31,13 +31,40 @@ const addVideo = async (req) => {
     try {
         return (
             await Course.findByIdAndUpdate(
+                { _id: req.params.courseId },
+                {
+                    $push: {
+                        "video": {
+                            "videoName": req.file.originalname,
+                            "videoLocation": req.file.path
+                        }
+                    }
+
+                }
+
+            )
+        )
+
+    } catch (error) {
+        return error
+    }
+}
+
+const addDoc = async (req) => {
+    try {
+        return (
+            await Course.findByIdAndUpdate(
                 { _id: req.body.courseId },
                 {
-                    video: {
-                        videoName: req.file.originalname,
-                        videoLocation: req.file.path
+                    $push: {
+                        "doc": {
+                            "docName": req.file.originalname,
+                            "docLocation": req.file.path
+                        }
                     }
+
                 }
+
             )
         )
 
@@ -82,5 +109,6 @@ module.exports = {
     create,
     updateCourse,
     deleteCourse,
-    addVideo
+    addVideo,
+    addDoc
 }

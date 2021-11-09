@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router()
 const Course = require('../models/Course')
-const { getAll, create, updateCourse, deleteCourse, addVideo } = require('../controllers/CourseController');
+const { getAll, create, updateCourse, deleteCourse, addVideo, addDoc } = require('../controllers/CourseController');
 const multer = require('multer');
 
 const storage = multer.diskStorage({
@@ -68,15 +68,25 @@ router.delete('/:courseId', async (req, res) => {
     try {
         res.json(await deleteCourse(req))
     } catch (err) {
-        res.json(err)
     }
+    res.json(err)
 })
 
 // add a video
-router.post('/addVideo', upload.single('video'), async (req, res) => {
+router.post('/upload/video/:courseId', upload.single('video'), async (req, res) => {
 
 
     const field = await addVideo(req)
+    return res.json(field)
+    // console.log(req.file)
+
+
+})
+// add a doc
+router.post('/addDoc', upload.single('doc'), async (req, res) => {
+
+
+    const field = await addDoc(req)
     return res.json(field)
 
 
