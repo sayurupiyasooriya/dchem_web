@@ -94,6 +94,17 @@ const updateCourse = async (req) => {
     }
 }
 
+
+
+//get video by courseId
+const getVideosByCourseId = async (req) => {
+    try {
+        return (await Course.find({ "_id": req.params.courseId }, { video: 1 }))
+    } catch (error) {
+        return error
+    }
+}
+
 const deleteCourse = async (req) => {
     try {
         return (await Course.deleteOne(req.param.courseId)
@@ -110,5 +121,6 @@ module.exports = {
     updateCourse,
     deleteCourse,
     addVideo,
-    addDoc
+    addDoc,
+    getVideosByCourseId
 }
