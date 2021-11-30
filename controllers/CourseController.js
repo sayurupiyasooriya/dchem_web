@@ -1,6 +1,10 @@
+const { isValidObjectId } = require("mongoose")
 const Course = require("../models/Course")
+const ObjectId = require('mongoose').Types.ObjectId
+const fs = require('fs');
 
 
+//create course
 const create = async (req) => {
     const course = new Course({
         title: req.body.title,
@@ -19,6 +23,8 @@ const create = async (req) => {
 }
 
 
+
+//get all courses
 const getAll = async () => {
     try {
         return (await Course.find().populate("field"))
@@ -27,6 +33,8 @@ const getAll = async () => {
     }
 }
 
+
+//add new video
 const addVideo = async (req) => {
     try {
         return (
@@ -50,11 +58,13 @@ const addVideo = async (req) => {
     }
 }
 
+
+//add course materials
 const addDoc = async (req) => {
     try {
         return (
             await Course.findByIdAndUpdate(
-                { _id: req.body.courseId },
+                { _id: req.params.courseId },
                 {
                     $push: {
                         "doc": {
@@ -73,6 +83,8 @@ const addDoc = async (req) => {
     }
 }
 
+
+//update course headers
 const updateCourse = async (req) => {
     try {
         return (await Course.findByIdAndUpdate(
@@ -96,7 +108,7 @@ const updateCourse = async (req) => {
 
 
 
-//get video by courseId
+//get all videos by course-id
 const getVideosByCourseId = async (req) => {
     try {
         return (await Course.find({ "_id": req.params.courseId }, { video: 1 }))
@@ -105,6 +117,8 @@ const getVideosByCourseId = async (req) => {
     }
 }
 
+
+//delete course
 const deleteCourse = async (req) => {
     try {
         return (await Course.deleteOne(req.param.courseId)
@@ -112,6 +126,115 @@ const deleteCourse = async (req) => {
     } catch (err) {
         return err
     }
+}
+
+//get video by video id
+const getVideoByVideoId = async (req) => {
+    try {
+        return (await Course.aggregate([{
+            $match: { 'video._id': ObjectId(req.params.videoId) }
+        },
+        {
+            $project: {
+                video: {
+                    $filter: {
+                        input: '$video',
+                        as: 'vid',
+                        cond: { $eq: ['$$vid._id', ObjectId(req.params.videoId)] }
+                    }
+                }
+            }
+        }
+        ]))
+    } catch (error) {
+        return error
+    }
+}
+
+
+
+const getDocByDocId = async (req) => {
+    try {
+        return (await Course.aggregate([{
+            $match: { 'doc._id': ObjectId(req.params.docId) }
+        },
+        {
+            $project: {
+                doc: {
+                    $filter: {
+                        input: '$doc',
+                        as: 'doc',
+                        cond: { $eq: ['$$doc._id', ObjectId(req.params.docId)] }
+                    }
+                }
+            }
+        }
+        ]))
+    } catch (error) {
+        return error
+    }
+}
+
+// get materials by course id
+const getMaterialsByCourseId = async (req) => {
+    try {
+        return (await Course.find({ "_id": req.params.courseId }, { doc: 1 }))
+    } catch (error) {
+        return error
+    }
+}
+
+//stream video
+const streamVideo = async (req) => {
+
+    try {
+        const path = await Course.aggregate([{
+            $match: { 'video._id': ObjectId(req.params.videoId) }
+        },
+        {
+            $project: {
+                video: {
+                    $filter: {
+                        input: '$video',
+                        as: 'vid',
+                        cond: { $eq: ['$$vid.videoLocation', ObjectId(req.params.videoId)] }
+                    }
+                }
+            }
+        }
+        ])
+    } catch (error) {
+        return error
+    }
+
+    const stat = fs.statSync(path)
+    const fileSize = stat.size
+    const range = req.headers.range
+    if (range) {
+        const parts = range.replace(/bytes=/, "").split("-")
+        const start = parseInt(parts[0], 10)
+        const end = parts[1]
+            ? parseInt(parts[1], 10)
+            : fileSize - 1
+        const chunksize = (end - start) + 1
+        const file = fs.createReadStream(path, { start, end })
+        const head = {
+            'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+            'Accept-Ranges': 'bytes',
+            'Content-Length': chunksize,
+            'Content-Type': 'video/mp4',
+        }
+        res.writeHead(206, head);
+        return file.pipe(res);
+    } else {
+        const head = {
+            'Content-Length': fileSize,
+            'Content-Type': 'video/mp4',
+        }
+        res.writeHead(200, head)
+        return fs.createReadStream(path).pipe(res)
+    }
+
 }
 
 
@@ -122,5 +245,9 @@ module.exports = {
     deleteCourse,
     addVideo,
     addDoc,
-    getVideosByCourseId
+    getVideosByCourseId,
+    getVideoByVideoId,
+    streamVideo,
+    getMaterialsByCourseId,
+    getDocByDocId
 }
