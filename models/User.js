@@ -19,16 +19,18 @@ const UserSchema = mongoose.Schema({
         type: String,
         require: true
     },
-    courses: [{
+    courseId: [{
         type: mongoose.Types.ObjectId,
         ref: 'Courses',
         require: true
     }],
-    userType: {
-        type: Number,
-        require: true,
-        default: 0
-    }
+
+    roles: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Role"
+        }
+    ]
 })
 
 module.exports = mongoose.model('Users', UserSchema)

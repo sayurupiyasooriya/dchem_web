@@ -18,6 +18,7 @@
   "homepage": "https://github.com/sayurupiyasooriya/dchem_web#readme",
   "dependencies": {
     "@material-ui/styles": "^4.11.4",
+    "base-64": "^1.0.0",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router()
 const Course = require('../models/Course')
+const base64 = require('base-64')
 const fs = require('fs')
 const ObjectId = require('mongoose').Types.ObjectId
 const {
@@ -145,8 +146,8 @@ router.get('/doc/:docId', async (req, res) => {
 })
 
 router.get('/doc/download/:docLocation', async (req, res) => {
-    const doc = req.params.docLocation
-    res.download(doc)
+    const docLocation = base64.decode(req.params.docLocation)
+    res.download(docLocation)
 })
 
 
