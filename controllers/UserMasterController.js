@@ -6,7 +6,7 @@ const fs = require('fs');
 
 const getUsers = async () => {
 
-    const users = await User.aggregate([
+    return (User.aggregate([
         {
             $lookup:
             {
@@ -18,9 +18,7 @@ const getUsers = async () => {
         },
         { $project: { "courses._id": 0, "courses._field": 0, "courses.date": 0, "courses.doc": 0, "courses.video": 0 } }
     ])
-    console.log(users)
-
-    return (users)
+    )
 }
 
 exports.getUsers = getUsers

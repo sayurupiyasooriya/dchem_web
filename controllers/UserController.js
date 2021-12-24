@@ -33,7 +33,6 @@ const createUser = async (req) => {
         password: hashedPw,
         email: req.body.email
     })
-    console.log(user)
     if (req.body.roles) {
         user.roles = await Role.find({
             name: { $in: req.body.roles }

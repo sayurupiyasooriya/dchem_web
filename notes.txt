@@ -1,0 +1,2 @@
+DB_CONNECTION=mongodb://root:sd13895@localhost:27017/d_chem_lms
+DB_CONNECTION= mongodb+srv://root:sd13895@lms.dmbmg.mongodb.net/lms?retryWrites=true&w=majority
