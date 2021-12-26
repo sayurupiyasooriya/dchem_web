@@ -26,10 +26,11 @@ app.use('/userMaster', userMasterRoute)
 
 
 
-mongoose.connect(process.env.DB_CONNECTION, {
+mongoose.connect('mongodb://root:sd13895@localhost:27017/lms', {
     useUnifiedTopology: true,
     useNewUrlParser: true
-}, () => {
+}, (err, db) => {
+    if (err) throw err;
     console.log("Connected to db")
     initial()
 })

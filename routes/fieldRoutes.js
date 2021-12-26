@@ -3,6 +3,7 @@ const router = express.Router();
 const Field = require('../models/Field');
 const multer = require('multer')
 const { getAll, create, getFieldSelect } = require('../controllers/FieldController');
+const { json } = require('body-parser');
 
 
 const storage = multer.diskStorage({
@@ -18,7 +19,13 @@ const upload = multer({ storage: storage })
 
 //get all fields
 router.get('/', async (req, res) => {
-    const fields = await getAll()
+    // const fields = await getAll()
+    let text = '{ "employees" : [' +
+        '{ "firstName":"John" , "lastName":"Doe" },' +
+        '{ "firstName":"Anna" , "lastName":"Smith" },' +
+        '{ "firstName":"Peter" , "lastName":"Jones" } ]}';
+    const fields = JSON.parse(text)
+    console.log(fields)
     return res.json(fields)
 })
 
